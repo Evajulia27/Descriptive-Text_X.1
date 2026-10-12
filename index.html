@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 10 English: Descriptive Text Interactive Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .highlight-id {
+            background-color: #fef08a;
+            border-bottom: 2px solid #eab308;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .highlight-desc {
+            background-color: #bbf7d0;
+            border-bottom: 2px solid #22c55e;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .highlight-adj {
+            background-color: #fed7aa;
+            border-bottom: 2px solid #f97316;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .highlight-verb {
+            background-color: #ddd6fe;
+            border-bottom: 2px solid #8b5cf6;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                        <i class="fa-solid font-bold fa-book-open text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-lg sm:text-xl text-slate-900 leading-tight">EnglishHub <span class="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-700 font-bold ml-1">Grade 10</span></h1>
+                        <p class="text-xs text-slate-500">Interactive Learning Module: Descriptive Text</p>
+                    </div>
+                </div>
+
+                <!-- Teacher Greeting & XP Counter -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Teacher: Ms. Eva J</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 px-3 py-1.5 rounded-full text-xs font-bold">
+                        <i class="fa-solid fa-trophy text-amber-500"></i>
+                        <span id="user-score-badge">XP: 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs Bar -->
+    <nav class="bg-slate-900 text-slate-300 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex overflow-x-auto space-x-1 sm:space-x-4 py-2 no-scrollbar">
+                <button onclick="switchTab('materi')" id="tab-btn-materi" class="tab-btn active px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap bg-brand-600 text-white">
+                    <i class="fa-solid fa-lightbulb"></i> 1. Materi Overview
+                </button>
+                <button onclick="switchTab('structure')" id="tab-btn-structure" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap hover:bg-slate-800 text-slate-300">
+                    <i class="fa-solid fa-sitemap"></i> 2. Generic Structure
+                </button>
+                <button onclick="switchTab('grammar')" id="tab-btn-grammar" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap hover:bg-slate-800 text-slate-300">
+                    <i class="fa-solid fa-pen-nib"></i> 3. Grammar Corner
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-btn-quiz" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap hover:bg-slate-800 text-slate-300">
+                    <i class="fa-solid fa-circle-question"></i> 4. Quiz & Practice
+                </button>
+                <button onclick="switchTab('flashcards')" id="tab-btn-flashcards" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap hover:bg-slate-800 text-slate-300">
+                    <i class="fa-solid fa-layer-group"></i> 5. Vocab Cards
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- SECTION 1: MATERI OVERVIEW -->
+        <section id="sec-materi" class="tab-content space-y-6">
+            <div class="bg-gradient-to-r from-brand-600 to-indigo-700 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl font-black">DESC</div>
+                <div class="relative z-10 max-w-3xl">
+                    <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Unit 2 • Grade 10</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold mt-3 mb-2">What is Descriptive Text?</h2>
+                    <p class="text-brand-100 text-sm sm:text-base leading-relaxed">
+                        Descriptive text is a text which says what a person, place, or thing is like. Its purpose is to describe and reveal a particular person, place, or thing in vivid detail so the reader can picture it in their mind.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Core Features Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200/80 hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-brand-600 flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">Social Function</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        To describe a <strong>specific</strong> object, person, animal, historical monument, or tourist attraction to the reader in sensory detail.
+                    </p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200/80 hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">Generic Structure</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Consists of two main structural blocks: <strong>Identification</strong> (introducing the topic) and <strong>Description</strong> (details, features, & qualities).
+                    </p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200/80 hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-2">Language Features</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Uses <strong>Simple Present Tense</strong>, descriptive <strong>Adjectives</strong>, <strong>Linking Verbs</strong> (is, are, feel), and sensory details.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive Example Reading -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slate-100">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-xl flex items-center gap-2">
+                            <i class="fa-solid fa-book-open-reader text-brand-600"></i> Sample Text: The Magical Raja Ampat
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-1">Read the passage below. Click buttons to toggle color highlights!</p>
+                    </div>
+
+                    <!-- Highlight Toggles -->
+                    <div class="flex flex-wrap gap-2 text-xs font-semibold">
+                        <button onclick="toggleHighlight('id')" class="px-3 py-1.5 rounded-lg bg-yellow-100 text-yellow-800 border border-yellow-300 hover:bg-yellow-200 transition flex items-center gap-1">
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span> Identification
+                        </button>
+                        <button onclick="toggleHighlight('desc')" class="px-3 py-1.5 rounded-lg bg-green-100 text-green-800 border border-green-300 hover:bg-green-200 transition flex items-center gap-1">
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Description
+                        </button>
+                        <button onclick="toggleHighlight('adj')" class="px-3 py-1.5 rounded-lg bg-orange-100 text-orange-800 border border-orange-300 hover:bg-orange-200 transition flex items-center gap-1">
+                            <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Adjectives
+                        </button>
+                    </div>
+                </div>
+
+                <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed text-base space-y-4">
+                    <p class="p-4 rounded-xl transition-all duration-300 bg-slate-50 border border-slate-100" id="para-1">
+                        <span class="hl-id-text"><strong>Raja Ampat</strong> is an archipelago located off the northwest tip of Bird's Head Peninsula in Papua, Indonesia. It consists of four main islands surrounded by hundreds of smaller ones.</span>
+                    </p>
+                    <p class="p-4 rounded-xl transition-all duration-300 bg-slate-50 border border-slate-100" id="para-2">
+                        <span class="hl-desc-text">The waters surrounding Raja Ampat are home to incredible marine life, including thousands of species of <span class="hl-adj-text">colorful</span> fish and <span class="hl-adj-text">vibrant</span> coral reefs. The <span class="hl-adj-text">crystal-clear</span> ocean allows divers to see underwater formations clearly. Visitors from all over the world come to experience its <span class="hl-adj-text">breathtaking</span> natural beauty and <span class="hl-adj-text">peaceful</span> atmosphere.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: GENERIC STRUCTURE -->
+        <section id="sec-structure" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-brand-600"></i> Generic Structure Breakdown
+                </h2>
+                <p class="text-slate-600 text-sm mb-6">Every descriptive text is organized into specific parts so the reader can understand the description easily.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Identification Card -->
+                    <div class="border-2 border-yellow-200 bg-yellow-50/50 rounded-2xl p-6 relative">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-3 py-1 rounded-full bg-yellow-200 text-yellow-800 font-bold text-xs">PART 1</span>
+                            <i class="fa-solid fa-map-pin text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-extrabold text-yellow-900 mb-2">1. Identification</h3>
+                        <p class="text-yellow-950 text-sm mb-4 leading-relaxed">
+                            This paragraph introduces the subject to be described (Who, What, or Where). It provides general background information so readers know what specific object is being focused on.
+                        </p>
+                        <div class="bg-white p-3.5 rounded-xl border border-yellow-200 text-xs text-slate-700 italic">
+                            <i class="fa-solid fa-quote-left text-yellow-400 mr-1"></i>
+                            "Raja Ampat is an archipelago located off the northwest tip of Papua, Indonesia..."
+                        </div>
+                    </div>
+
+                    <!-- Description Card -->
+                    <div class="border-2 border-emerald-200 bg-emerald-50/50 rounded-2xl p-6 relative">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-3 py-1 rounded-full bg-emerald-200 text-emerald-800 font-bold text-xs">PART 2</span>
+                            <i class="fa-solid fa-eye text-emerald-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-extrabold text-emerald-900 mb-2">2. Description</h3>
+                        <p class="text-emerald-950 text-sm mb-4 leading-relaxed">
+                            This part provides specific details about the subject. It describes parts, qualities, unique characteristics, physical appearance, weather, or atmosphere.
+                        </p>
+                        <div class="bg-white p-3.5 rounded-xl border border-emerald-200 text-xs text-slate-700 italic">
+                            <i class="fa-solid fa-quote-left text-emerald-400 mr-1"></i>
+                            "The waters surrounding Raja Ampat are home to incredible marine life..."
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Structure Practice Classifier -->
+                <div class="mt-8 bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+                        <i class="fa-solid fa-puzzle-piece text-brand-600"></i> Quick Check: Structure Classifier
+                    </h4>
+                    <p class="text-xs text-slate-600 mb-4">Read the snippet below and decide which structure part it belongs to:</p>
+                    
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 text-slate-800 font-medium text-sm mb-4">
+                        "Borobudur is a 9th-century Mahayana Buddhist temple in Magelang Regency, Central Java, Indonesia."
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="checkStructureAnswer('id', this)" class="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:border-brand-500 hover:bg-brand-50 text-slate-700 font-semibold text-sm transition flex-1">
+                            Identification
+                        </button>
+                        <button onclick="checkStructureAnswer('desc', this)" class="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:border-brand-500 hover:bg-brand-50 text-slate-700 font-semibold text-sm transition flex-1">
+                            Description
+                        </button>
+                    </div>
+                    <div id="structure-feedback" class="mt-3 text-xs font-bold hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: GRAMMAR CORNER -->
+        <section id="sec-grammar" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-nib text-brand-600"></i> Grammar Corner: Key Language Features
+                </h2>
+                <p class="text-slate-600 text-sm mb-6">Master these essential grammar rules to write clear and beautiful descriptive texts.</p>
+
+                <!-- Grammar Cards -->
+                <div class="space-y-6">
+                    <!-- 1. Simple Present Tense -->
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden">
+                        <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
+                            <h3 class="font-bold flex items-center gap-2">
+                                <span class="bg-brand-500 text-white text-xs px-2 py-0.5 rounded">1</span> Simple Present Tense
+                            </h3>
+                            <span class="text-xs text-slate-400">Factual & General Truths</span>
+                        </div>
+                        <div class="p-6 bg-slate-50 space-y-4">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                Descriptive text uses the Simple Present Tense because it describes facts, ongoing characteristics, and general truths that are currently true.
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                                    <span class="font-bold text-brand-600 block mb-1">Verbal Sentence</span>
+                                    <code class="text-slate-800 bg-slate-100 px-2 py-1 rounded block mb-2">Subject + V1 (s/es)</code>
+                                    <p class="text-slate-600">e.g., "The park <strong>welcomes</strong> thousands of visitors every month."</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                                    <span class="font-bold text-indigo-600 block mb-1">Nominal Sentence</span>
+                                    <code class="text-slate-800 bg-slate-100 px-2 py-1 rounded block mb-2">Subject + is/am/are + Adj/Noun</code>
+                                    <p class="text-slate-600">e.g., "The coral reefs <strong>are</strong> extraordinarily vibrant."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Adjective Order -->
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden">
+                        <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
+                            <h3 class="font-bold flex items-center gap-2">
+                                <span class="bg-orange-500 text-white text-xs px-2 py-0.5 rounded">2</span> Order of Adjectives
+                            </h3>
+                            <span class="text-xs text-slate-400">OPINION + SIZE + AGE + COLOR + MATERIAL</span>
+                        </div>
+                        <div class="p-6 bg-slate-50 space-y-4">
+                            <p class="text-sm text-slate-700">
+                                When using multiple adjectives before a noun, follow the adjective order rule:
+                            </p>
+                            <div class="flex overflow-x-auto gap-2 py-2 text-xs">
+                                <div class="bg-amber-100 text-amber-800 px-3 py-2 rounded-lg font-bold text-center min-w-[80px]">Opinion<br><span class="text-[10px] font-normal">beautiful</span></div>
+                                <div class="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg font-bold text-center min-w-[80px]">Size<br><span class="text-[10px] font-normal">large</span></div>
+                                <div class="bg-emerald-100 text-emerald-800 px-3 py-2 rounded-lg font-bold text-center min-w-[80px]">Age<br><span class="text-[10px] font-normal">ancient</span></div>
+                                <div class="bg-purple-100 text-purple-800 px-3 py-2 rounded-lg font-bold text-center min-w-[80px]">Color<br><span class="text-[10px] font-normal">white</span></div>
+                                <div class="bg-rose-100 text-rose-800 px-3 py-2 rounded-lg font-bold text-center min-w-[80px]">Material<br><span class="text-[10px] font-normal">sandy</span></div>
+                            </div>
+
+                            <!-- Mini Interactive Game: Adjective Phrase Builder -->
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 mt-4">
+                                <h4 class="text-xs font-bold text-slate-700 uppercase mb-2">Mini-Challenge: Adjective Order Check</h4>
+                                <p class="text-xs text-slate-600 mb-3">Which order is grammatically correct for describing a beach?</p>
+                                <div class="space-y-2">
+                                    <button onclick="checkAdjQuiz(false, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 text-xs font-medium hover:bg-slate-50 transition">
+                                        A. A white sandy beautiful beach
+                                    </button>
+                                    <button onclick="checkAdjQuiz(true, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 text-xs font-medium hover:bg-slate-50 transition">
+                                        B. A beautiful white sandy beach (Opinion + Color + Material + Noun)
+                                    </button>
+                                    <button onclick="checkAdjQuiz(false, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 text-xs font-medium hover:bg-slate-50 transition">
+                                        C. A sandy beautiful white beach
+                                    </button>
+                                </div>
+                                <div id="adj-feedback" class="mt-2 text-xs font-bold hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: QUIZ & PRACTICE SECTION -->
+        <section id="sec-quiz" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                
+                <!-- Quiz Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slate-100">
+                    <div>
+                        <span class="bg-brand-100 text-brand-700 text-xs font-bold px-3 py-1 rounded-full uppercase">Practice Assessment</span>
+                        <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Grade 10 English: Descriptive Text Test</h2>
+                        <p class="text-xs text-slate-500">Master reading comprehension and grammar with comprehensive, multi-paragraph texts.</p>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full sm:w-48 text-right">
+                        <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                            <span>Question <span id="q-curr">1</span> of <span id="q-total">10</span></span>
+                            <span id="q-percent">10%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                            <div id="q-progress-bar" class="bg-brand-600 h-2.5 rounded-full transition-all duration-300" style="width: 10%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Card Container -->
+                <div id="quiz-box" class="space-y-6">
+                    <!-- Long Reading Passage Container -->
+                    <div id="quiz-passage-box" class="bg-slate-50 border-l-4 border-brand-500 p-5 rounded-r-2xl text-xs sm:text-sm text-slate-700 leading-relaxed font-normal shadow-inner max-h-80 overflow-y-auto space-y-3">
+                        <div class="font-bold text-slate-900 flex items-center gap-2 text-sm sticky top-0 bg-slate-50 py-1 border-b border-slate-200/60">
+                            <i class="fa-solid fa-book-open text-brand-600"></i> <span id="quiz-passage-title">Reading Passage</span>
+                        </div>
+                        <div id="quiz-passage-text" class="space-y-3 whitespace-pre-line text-slate-700"></div>
+                    </div>
+
+                    <!-- Question Title -->
+                    <div class="space-y-2">
+                        <h3 id="quiz-question-title" class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                            Loading question...
+                        </h3>
+                    </div>
+
+                    <!-- Options Grid -->
+                    <div id="quiz-options-container" class="grid grid-cols-1 gap-3">
+                        <!-- Options injected dynamically by JS -->
+                    </div>
+
+                    <!-- Rationale / Feedback Box -->
+                    <div id="quiz-rationale-box" class="hidden p-4 rounded-xl text-xs sm:text-sm transition-all duration-200">
+                        <div class="font-bold mb-1 flex items-center gap-1.5" id="quiz-rationale-title"></div>
+                        <p id="quiz-rationale-text" class="text-slate-700 leading-relaxed"></p>
+                    </div>
+
+                    <!-- Quiz Navigation Buttons -->
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                        <button id="btn-prev-q" onclick="navigateQuiz(-1)" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs sm:text-sm hover:bg-slate-200 transition disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> Previous
+                        </button>
+                        <button id="btn-next-q" onclick="navigateQuiz(1)" class="px-5 py-2.5 rounded-xl bg-brand-600 text-white font-bold text-xs sm:text-sm hover:bg-brand-700 transition shadow-md shadow-brand-500/20">
+                            Next Question <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Completion Screen -->
+                <div id="quiz-completed-box" class="hidden text-center py-8 space-y-6">
+                    <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto shadow-inner">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Quiz Completed!</h3>
+                        <p class="text-slate-600 text-sm mt-1">Here is your performance evaluation summary:</p>
+                    </div>
+
+                    <!-- Score Card -->
+                    <div class="max-w-md mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-6 grid grid-cols-2 gap-4">
+                        <div class="text-center border-r border-slate-200 pr-2">
+                            <span class="text-xs uppercase text-slate-500 font-bold">Your Score</span>
+                            <div class="text-3xl sm:text-4xl font-extrabold text-brand-600 mt-1" id="final-score-val">0/10</div>
+                        </div>
+                        <div class="text-center pl-2">
+                            <span class="text-xs uppercase text-slate-500 font-bold">Accuracy</span>
+                            <div class="text-3xl sm:text-4xl font-extrabold text-emerald-600 mt-1" id="final-accuracy-val">0%</div>
+                        </div>
+                    </div>
+
+                    <div id="teacher-comment" class="max-w-md mx-auto p-4 bg-brand-50 border border-brand-200 rounded-xl text-xs sm:text-sm text-brand-900 font-medium">
+                        <!-- Dynamic teacher comment -->
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="resetQuiz()" class="px-6 py-3 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Try Again
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: VOCABULARY FLASHCARDS -->
+        <section id="sec-flashcards" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-brand-600"></i> Vocabulary Builder
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">Click the speaker icon on any card to hear the native English pronunciation!</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="vocab-cards-grid">
+                    <!-- Cards populated by JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            <p>© 2026 High School English Learning Platform • Class 10 Descriptive Text Module • Ms. Eva J</p>
+        </div>
+    </footer>
+
+    <script>
+        // LONG READING PASSAGES DATASETS
+        const PASSAGE_BOROBUDUR = `Borobudur is a majestic 9th-century Mahayana Buddhist temple located in Magelang Regency, Central Java, Indonesia. Built during the reign of the Sailendra Dynasty, it stands as the world's largest Buddhist monument. The temple is situated on an elevated hill, surrounded by lush green valleys and dramatic volcanoes like Mount Merapi and Mount Merbabu.
+
+The structure of Borobudur consists of nine stacked platforms: six square and three circular, topped by a central dome. The walls and balustrades are decorated with over two thousand intricate relief panels depicting Buddhist teachings and ancient Javanese life. Furthermore, seventy-two perforated stupas surround the upper circular platforms, each enclosing a statue of the Buddha.`;
+
+        const PASSAGE_BROMO = `Mount Bromo is an active volcano located inside the massive Tengger Caldera in Bromo Tengger Semeru National Park, East Java, Indonesia. Standing at an elevation of 2,329 meters, Bromo is famous not for its height, but for its breathtaking, desolate landscape and ethereal sunrise views over the vast sea of volcanic sand.
+
+White sulfur smoke constantly billows from Bromo's active crater, reminding visitors of the Earth's raw subterranean forces. Every year, the indigenous Tenggerese people celebrate the Yadnya Kasada festival at the rim of the crater, where they throw offerings of fruits, vegetables, rice, and livestock into the volcano to appease the mountain gods and express gratitude for peace and prosperity.`;
+
+        // 10 COMPREHENSIVE HIGH SCHOOL QUESTIONS (100% IN ENGLISH - 5 OPTIONS A-E)
+        const quizData = [
+            {
+                passageTitle: "Text 1: The Majestic Borobudur Temple",
+                passage: PASSAGE_BOROBUDUR,
+                question: "What is the primary purpose of the text above?",
+                options: [
+                    "To explain the historical conflict between ancient Javanese dynasties.",
+                    "To describe the location, architecture, and significance of Borobudur Temple.",
+                    "To persuade readers to study Mahayana Buddhist philosophy in Central Java.",
+                    "To compare Borobudur Temple with other UNESCO World Heritage sites in Asia.",
+                    "To report the daily agricultural practices of people living near Mount Merapi."
+                ],
+                correct: 1,
+                rationale: "The text is a descriptive text aimed at detailing the physical traits, background location, architecture, and significance of Borobudur Temple."
+            },
+            {
+                passageTitle: "Text 1: The Majestic Borobudur Temple",
+                passage: PASSAGE_BOROBUDUR,
+                question: "According to the second paragraph, what makes the wall structures of Borobudur visually unique?",
+                options: [
+                    "They are painted in vibrant red and golden colors.",
+                    "They feature thousands of relief panels depicting Buddhist teachings and ancient Javanese life.",
+                    "They are constructed entirely out of volcanic timber and bamboo.",
+                    "They contain large modern glass windows looking out over Mount Merapi.",
+                    "They are built without any foundation stones or structural balustrades."
+                ],
+                correct: 1,
+                rationale: "Paragraph 2 explicitly mentions that the walls and balustrades are decorated with over 2,000 intricate relief panels."
+            },
+            {
+                passageTitle: "Text 1: The Majestic Borobudur Temple",
+                passage: PASSAGE_BOROBUDUR,
+                question: "The word 'intricate' in paragraph 2 is closest in meaning to...",
+                options: [
+                    "Simple and crude",
+                    "Detailed and complex",
+                    "Smooth and polished",
+                    "Fragile and broken",
+                    "Enormous and heavy"
+                ],
+                correct: 1,
+                rationale: "'Intricate' means having many complex and detailed parts, which describes the fine stone relief carvings."
+            },
+            {
+                passageTitle: "Text 1: The Majestic Borobudur Temple",
+                passage: PASSAGE_BOROBUDUR,
+                question: "In terms of Generic Structure, Paragraph 1 serves as the...",
+                options: [
+                    "Identification, because it introduces the subject and its general location.",
+                    "Description, because it gives specific details about the 72 stupas.",
+                    "Re-orientation, because it summarizes the writer's final personal feeling.",
+                    "Resolution, because it resolves the central problem in the text.",
+                    "Complication, because it presents a challenge faced by the Sailendra Dynasty."
+                ],
+                correct: 0,
+                rationale: "Paragraph 1 introduces the monument name, Dynasty era, and geographical location, which forms the Identification section."
+            },
+            {
+                passageTitle: "Text 2: Mount Bromo: The Volcanic Wonder",
+                passage: PASSAGE_BROMO,
+                question: "Which of the following statements is TRUE about Mount Bromo according to the text?",
+                options: [
+                    "Mount Bromo is the tallest mountain peak in the entire archipelago.",
+                    "Mount Bromo is an extinct volcano surrounded by a thick tropical rainforest.",
+                    "White sulfur smoke continuously emerges from its active volcanic crater.",
+                    "Tourists are prohibited from visiting Bromo during the morning hours.",
+                    "The Sea of Sand is filled with freshwater rivers and coastal coral reefs."
+                ],
+                correct: 2,
+                rationale: "Paragraph 2 notes that 'White sulfur smoke constantly billows from Bromo's active crater'."
+            },
+            {
+                passageTitle: "Text 2: Mount Bromo: The Volcanic Wonder",
+                passage: PASSAGE_BROMO,
+                question: "How do the native Tenggerese people express their cultural reverence toward Mount Bromo during Yadnya Kasada?",
+                options: [
+                    "By building stone monuments around the active caldera.",
+                    "By throwing agricultural offerings and livestock into the crater.",
+                    "By planting lotus flowers along the Sea of Sand.",
+                    "By closing all access roads to tourists every weekend.",
+                    "By climbing Mount Penanjakan to construct temporary wooden stupas."
+                ],
+                correct: 1,
+                rationale: "Paragraph 2 explains that the Tenggerese throw rice, fruit, and livestock into the volcano crater as offerings."
+            },
+            {
+                passageTitle: "Grammar in Context: Simple Present Tense",
+                passage: PASSAGE_BROMO,
+                question: "Choose the correct Simple Present Tense verb form to complete this statement:\n\"Every morning, hundreds of travelers ___ at the summit of Mount Penanjakan to watch the sunrise.\"",
+                options: [
+                    "gathers",
+                    "gather",
+                    "gathered",
+                    "gathering",
+                    "has gathered"
+                ],
+                correct: 1,
+                rationale: "The subject 'hundreds of travelers' is plural (they), so the base verb 'gather' without -s is used in Simple Present Tense."
+            },
+            {
+                passageTitle: "Grammar Corner: Linking Verbs",
+                passage: null,
+                question: "Select the grammatically correct linking verb for this nominal descriptive sentence:\n\"The volcanic ash fields around Mount Bromo ___ remarkably vast and desolate.\"",
+                options: [
+                    "is",
+                    "am",
+                    "are",
+                    "was",
+                    "were"
+                ],
+                correct: 2,
+                rationale: "The subject 'The volcanic ash fields' is plural, requiring the plural present linking verb 'are'."
+            },
+            {
+                passageTitle: "Grammar Corner: Order of Adjectives",
+                passage: null,
+                question: "Which option correctly follows the standard adjective order (Opinion + Size + Age + Color + Material + Noun)?",
+                options: [
+                    "A stone ancient huge temple",
+                    "An ancient stone huge temple",
+                    "A magnificent huge ancient stone temple",
+                    "A huge stone magnificent ancient temple",
+                    "A stone magnificent huge ancient temple"
+                ],
+                correct: 2,
+                rationale: "Correct order: Opinion (magnificent) + Size (huge) + Age (ancient) + Material (stone) + Noun (temple)."
+            },
+            {
+                passageTitle: "Grammar Corner: Negative Present Tense",
+                passage: null,
+                question: "What is the correct negative Simple Present Tense form for the following sentence?\n\"The park ranger guides tourists through the volcano valley.\"",
+                options: [
+                    "The park ranger do not guide tourists through the volcano valley.",
+                    "The park ranger does not guide tourists through the volcano valley.",
+                    "The park ranger is not guide tourists through the volcano valley.",
+                    "The park ranger did not guide tourists through the volcano valley.",
+                    "The park ranger not guides tourists through the volcano valley."
+                ],
+                correct: 1,
+                rationale: "For a singular subject ('The park ranger'), negative verbal sentences in Simple Present Tense use 'does not' + V1 ('guide')."
+            }
+        ];
+
+        // VOCABULARY DATA
+        const vocabData = [
+            { word: "Intricate", type: "Adjective", meaning: "Sangat rumit & detail", ex: "The stone carvings show intricate details." },
+            { word: "Majestic", type: "Adjective", meaning: "Megah & memukau", ex: "Borobudur is a majestic monument." },
+            { word: "Surreal", type: "Adjective", meaning: "Mirip mimpi / Luar biasa", ex: "The volcanic crater offers a surreal view." },
+            { word: "Caldera", type: "Noun", meaning: "Kawah gunung berapi raksasa", ex: "Bromo sits inside a huge caldera." },
+            { word: "Indigenous", type: "Adjective", meaning: "Pribumi / Asli daerah tersebut", ex: "The Tenggerese are indigenous people." },
+            { word: "Desolate", type: "Adjective", meaning: "LENGANG / Terpencil & tandus", ex: "The desert surrounding Bromo is desolate." }
+        ];
+
+        // APP STATE
+        let currentQuestionIdx = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let userXp = 0;
+
+        // ON LOAD INITIALIZATION
+        window.onload = function() {
+            renderVocabCards();
+            loadQuestion(0);
+        };
+
+        // TAB SWITCHING
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white');
+                btn.classList.add('hover:bg-slate-800', 'text-slate-300');
+            });
+
+            document.getElementById(`sec-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            activeBtn.classList.add('bg-brand-600', 'text-white');
+            activeBtn.classList.remove('hover:bg-slate-800', 'text-slate-300');
+        }
+
+        // TEXT HIGHLIGHT TOGGLES
+        let activeHL = null;
+        function toggleHighlight(type) {
+            const p1 = document.getElementById('para-1');
+            const p2 = document.getElementById('para-2');
+
+            p1.querySelectorAll('span').forEach(s => s.className = '');
+            p2.querySelectorAll('span').forEach(s => s.className = '');
+
+            if (activeHL === type) {
+                activeHL = null;
+                return;
+            }
+
+            activeHL = type;
+
+            if (type === 'id') {
+                p1.querySelector('.hl-id-text').className = 'highlight-id font-semibold';
+            } else if (type === 'desc') {
+                p2.querySelector('.hl-desc-text').className = 'highlight-desc font-semibold';
+            } else if (type === 'adj') {
+                p2.querySelectorAll('.hl-adj-text').forEach(el => el.className = 'highlight-adj font-bold');
+            }
+        }
+
+        // GENERIC STRUCTURE CHECK
+        function checkStructureAnswer(type, btn) {
+            const fb = document.getElementById('structure-feedback');
+            fb.classList.remove('hidden');
+            if (type === 'id') {
+                fb.className = "mt-3 text-xs font-bold text-emerald-600 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200";
+                fb.innerHTML = "<i class='fa-solid fa-circle-check mr-1'></i> Correct! This sentence identifies the temple name and location, making it the Identification.";
+                addXp(10);
+            } else {
+                fb.className = "mt-3 text-xs font-bold text-rose-600 bg-rose-50 p-2.5 rounded-lg border border-rose-200";
+                fb.innerHTML = "<i class='fa-solid fa-circle-xmark mr-1'></i> Not quite. It introduces the subject and location, which belongs to Identification!";
+            }
+        }
+
+        // ADJECTIVE QUIZ CHECK
+        function checkAdjQuiz(isCorrect, btn) {
+            const fb = document.getElementById('adj-feedback');
+            fb.classList.remove('hidden');
+            if (isCorrect) {
+                fb.className = "mt-3 text-xs font-bold text-emerald-600 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200";
+                fb.innerHTML = "<i class='fa-solid fa-circle-check mr-1'></i> Excellent! Beautiful (Opinion) + White (Color) + Sandy (Material) + Beach (Noun).";
+                addXp(10);
+            } else {
+                fb.className = "mt-3 text-xs font-bold text-rose-600 bg-rose-50 p-2.5 rounded-lg border border-rose-200";
+                fb.innerHTML = "<i class='fa-solid fa-circle-xmark mr-1'></i> Incorrect order. Always place Opinion before Color and Material!";
+            }
+        }
+
+        function loadQuestion(idx) {
+            currentQuestionIdx = idx;
+            const q = quizData[idx];
+
+            // Update Progress Bar
+            document.getElementById('q-curr').innerText = idx + 1;
+            document.getElementById('q-total').innerText = quizData.length;
+            const pct = Math.round(((idx + 1) / quizData.length) * 100);
+            document.getElementById('q-percent').innerText = `${pct}%`;
+            document.getElementById('q-progress-bar').style.width = `${pct}%`;
+
+            // Handle Passage Display
+            const passageBox = document.getElementById('quiz-passage-box');
+            if (q.passage) {
+                passageBox.classList.remove('hidden');
+                document.getElementById('quiz-passage-title').innerText = q.passageTitle || "Reading Passage";
+                document.getElementById('quiz-passage-text').innerText = q.passage;
+            } else {
+                passageBox.classList.add('hidden');
+            }
+
+            // Question Title
+            document.getElementById('quiz-question-title').innerText = `${idx + 1}. ${q.question}`;
+
+            // Render Options
+            const container = document.getElementById('quiz-options-container');
+            container.innerHTML = '';
+
+            const selectedAns = userAnswers[idx];
+
+            q.options.forEach((opt, oIdx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border text-xs sm:text-sm font-medium transition flex items-center justify-between `;
+                
+                if (selectedAns === null) {
+                    optBtn.className += `border-slate-200 hover:border-brand-500 hover:bg-brand-50 text-slate-800 bg-white`;
+                } else {
+                    if (oIdx === q.correct) {
+                        optBtn.className += `border-emerald-500 bg-emerald-50 text-emerald-900 font-bold`;
+                    } else if (selectedAns === oIdx) {
+                        optBtn.className += `border-rose-500 bg-rose-50 text-rose-900 font-bold`;
+                    } else {
+                        optBtn.className += `border-slate-200 text-slate-400 bg-slate-50 opacity-60`;
+                    }
+                }
+
+                optBtn.onclick = () => selectOption(oIdx);
+
+                optBtn.innerHTML = `
+                    <span>${String.fromCharCode(65 + oIdx)}. ${opt}</span>
+                    ${selectedAns !== null && oIdx === q.correct ? '<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>' : ''}
+                    ${selectedAns !== null && selectedAns === oIdx && oIdx !== q.correct ? '<i class="fa-solid fa-circle-xmark text-rose-600 text-lg"></i>' : ''}
+                `;
+                container.appendChild(optBtn);
+            });
+
+            // Rationale Display
+            const ratBox = document.getElementById('quiz-rationale-box');
+            if (selectedAns !== null) {
+                ratBox.classList.remove('hidden');
+                const isUserCorrect = selectedAns === q.correct;
+
+                if (isUserCorrect) {
+                    ratBox.className = "p-4 rounded-xl text-xs sm:text-sm bg-emerald-50 border border-emerald-200 text-emerald-900";
+                    document.getElementById('quiz-rationale-title').innerHTML = "<i class='fa-solid fa-circle-check text-emerald-600'></i> Correct Answer!";
+                } else {
+                    ratBox.className = "p-4 rounded-xl text-xs sm:text-sm bg-rose-50 border border-rose-200 text-rose-900";
+                    document.getElementById('quiz-rationale-title').innerHTML = "<i class='fa-solid fa-circle-xmark text-rose-600'></i> Incorrect Answer";
+                }
+                document.getElementById('quiz-rationale-text').innerText = q.rationale;
+            } else {
+                ratBox.classList.add('hidden');
+            }
+
+            // Button States
+            document.getElementById('btn-prev-q').disabled = idx === 0;
+            const nextBtn = document.getElementById('btn-next-q');
+            if (idx === quizData.length - 1) {
+                nextBtn.innerHTML = `Finish Quiz <i class="fa-solid fa-flag-checkered ml-1"></i>`;
+            } else {
+                nextBtn.innerHTML = `Next Question <i class="fa-solid fa-arrow-right ml-1"></i>`;
+            }
+        }
+
+        function selectOption(oIdx) {
+            if (userAnswers[currentQuestionIdx] !== null) return;
+            userAnswers[currentQuestionIdx] = oIdx;
+
+            if (oIdx === quizData[currentQuestionIdx].correct) {
+                addXp(20);
+            }
+
+            loadQuestion(currentQuestionIdx);
+        }
+
+        function navigateQuiz(dir) {
+            const newIdx = currentQuestionIdx + dir;
+            if (newIdx >= 0 && newIdx < quizData.length) {
+                loadQuestion(newIdx);
+            } else if (newIdx >= quizData.length) {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-box').classList.add('hidden');
+            document.getElementById('quiz-completed-box').classList.remove('hidden');
+
+            let correctCount = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === quizData[idx].correct) correctCount++;
+            });
+
+            const score = correctCount;
+            const accuracy = Math.round((correctCount / quizData.length) * 100);
+
+            document.getElementById('final-score-val').innerText = `${score}/10`;
+            document.getElementById('final-accuracy-val').innerText = `${accuracy}%`;
+
+            const commentBox = document.getElementById('teacher-comment');
+            if (accuracy >= 80) {
+                commentBox.innerHTML = `🌟 <strong>Outstanding Job!</strong> You have demonstrated excellent mastery over long reading texts and English grammar structure!`;
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } else if (accuracy >= 60) {
+                commentBox.innerHTML = `👍 <strong>Good Effort!</strong> You understand the core ideas of descriptive text well. Review the grammar corner to boost your score further!`;
+            } else {
+                commentBox.innerHTML = `📚 <strong>Keep Practicing!</strong> Take time to re-read the passages and review the Generic Structure tab before trying again!`;
+            }
+        }
+
+        function resetQuiz() {
+            userAnswers = new Array(quizData.length).fill(null);
+            document.getElementById('quiz-completed-box').classList.add('hidden');
+            document.getElementById('quiz-box').classList.remove('hidden');
+            loadQuestion(0);
+        }
+
+        // VOCABULARY CARDS RENDER
+        function renderVocabCards() {
+            const grid = document.getElementById('vocab-cards-grid');
+            grid.innerHTML = '';
+
+            vocabData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-md transition relative group flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-brand-50 text-brand-700">${item.type}</span>
+                            <button onclick="speakWord('${item.word}')" class="text-slate-400 hover:text-brand-600 p-1 transition" title="Listen Pronunciation">
+                                <i class="fa-solid fa-volume-high text-base"></i>
+                            </button>
+                        </div>
+                        <h4 class="text-lg font-extrabold text-slate-900 mb-1">${item.word}</h4>
+                        <p class="text-xs font-semibold text-brand-600 mb-3">${item.meaning}</p>
+                    </div>
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] text-slate-600 italic">
+                        "${item.ex}"
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function addXp(amount) {
+            userXp += amount;
+            document.getElementById('user-score-badge').innerText = `XP: ${userXp}`;
+        }
+    </script>
+</body>
+</html>
